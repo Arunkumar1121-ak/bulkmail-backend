@@ -5,10 +5,11 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-=
+
+
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: process.env.FRONTEND_URL, 
   methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
 };
