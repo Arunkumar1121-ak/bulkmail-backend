@@ -15,7 +15,7 @@ const corsOptions = {
   credentials: true, // Allow cookies if needed
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight requests
+app.options("/sendmail", cors(corsOptions)); // Handle preflight requests
 
 // ---------------- MONGODB CONNECTION ----------------
 mongoose.connect(process.env.MONGO_URI)
