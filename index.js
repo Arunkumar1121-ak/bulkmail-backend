@@ -12,9 +12,10 @@ const corsOptions = {
 };
 
 // Handle CORS preflight requests
-app.options("*", cors(corsOptions)); 
 app.use(cors(corsOptions));
+app.options("/*", cors(corsOptions)); // <--- fixed
 app.use(express.json());
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
