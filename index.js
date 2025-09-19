@@ -1,5 +1,7 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
+const cors = require("cors");
+
 const mongoose = require("mongoose");
 
 const app = express();
@@ -15,9 +17,10 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("db connected");
     })
-    .catch(() => {
-        console.log("db not connected");
-    });
+    .catch((err) => {
+    console.error("DB connection failed:", err);
+});
+
 
 const credential = mongoose.model("credential", {}, "bulkmail");
 
