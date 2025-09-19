@@ -15,11 +15,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-
-app.options("/sendmail", cors(corsOptions));
-
-
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
