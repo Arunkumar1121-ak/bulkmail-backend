@@ -9,11 +9,10 @@ const app = express();
 
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, 
+  origin: "https://bulkmail-frontend-pi.vercel.app",
   methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
 };
-
 
 
 app.use(cors(corsOptions));
