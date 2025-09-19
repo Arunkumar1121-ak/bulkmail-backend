@@ -2,30 +2,30 @@ const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
-
-require("dotenv").config(); // make sure you have a .env with MONGO_URI
+require("dotenv").config(); // Make sure you have a .env file with MONGO_URI
 
 const app = express();
 app.use(express.json());
 
-// CORS configuration
+// ---------------- CORS CONFIGURATION ----------------
 const corsOptions = {
-  origin: "https://bulkmail-frontend-pi.vercel.app", // frontend URL
+  origin: "https://bulkmail-frontend-pi.vercel.app", // Your frontend URL
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
+  credentials: true, // Allow cookies if needed
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // handle preflight requests
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
-// Connect to MongoDB
+// ---------------- MONGODB CONNECTION ----------------
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("DB connected"))
-  .catch((err) => console.log("DB connection error:", err));
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
-// MongoDB model for email credentials
-const Credential = mongoose.model("credential", {}, "bulkmail");
+// ---------------- MONGODB MODEL ----------------
+const Credential = mongoose.model("credential", {}, "bulkmail"); // Collection: bulkmail
 
-// Send emails
+// ---------------- SEND BULK EMAILS ----------------
 app.post("/sendmail", async (req, res) => {
   try {
     const { msg, emailList } = req.body;
@@ -36,7 +36,7 @@ app.post("/sendmail", async (req, res) => {
 
     const data = await Credential.find();
     if (!data || data.length === 0) {
-      return res.status(400).json({ success: false, message: "No credentials found" });
+      return res.status(400).json({ success: false, message: "No email credentials found" });
     }
 
     const { user, pass } = data[0].toJSON();
@@ -65,5 +65,6 @@ app.post("/sendmail", async (req, res) => {
   }
 });
 
+// ---------------- START SERVER ----------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
