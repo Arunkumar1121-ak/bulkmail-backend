@@ -7,38 +7,32 @@ const app = express();
 
 const corsOptions = {
   origin: "https://bulkmail-frontend-pi.vercel.app",
-  methods: ["GET", "POST", "OPTIONS"],
+  methods: ["GET", "POST"],
   credentials: true,
 };
 
-// Handle CORS preflight requests
-app.use(cors(corsOptions));
-app.options("/*", cors(corsOptions)); // <--- fixed
+app.use(cors(corsOptions));  // ✅ handles OPTIONS automatically
 app.use(express.json());
 
-
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("DB connected"))
-    .catch((err) => console.error("DB connection failed:", err));
+  .then(() => console.log("db connected"))
+  .catch((err) => console.error("DB connection failed:", err));
 
 const credential = mongoose.model("credential", {}, "bulkmail");
 
-// POST /sendmail route
 app.post("/sendmail", async (req, res) => {
   const { msg, emailList } = req.body;
 
   try {
     const data = await credential.find();
-    if (!data.length) return res.status(500).send(false);
-
     const { user, pass } = data[0].toJSON();
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: { user, pass },
     });
 
-    for (let email of emailList) {
+    for (const email of emailList) {
       await transporter.sendMail({
         from: user,
         to: email,
