@@ -5,11 +5,19 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-app.use(cors({
+=
+
+const corsOptions = {
   origin: process.env.FRONTEND_URL,
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+
+
+app.options("*", cors(corsOptions));
+
 
 app.use(express.json());
 
